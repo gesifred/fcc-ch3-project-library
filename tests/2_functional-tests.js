@@ -40,12 +40,30 @@ suite('Functional Tests', function() {
 
     suite('POST /api/books with title => create book object/expect book object', function() {
       
-      test('Test POST /api/books with title', function(done) {
-        //done();
+      test('Test POST /api/books with title', function() {
+        chai.request(server)
+        .post("/api/books")
+        .send({
+          title:'string'
+        })
+        .end(function(err,res){
+          assert.equal(res.status,200);
+          assert.equal(res.body.title,'string');
+          //done()
+        })
       });
       
       test('Test POST /api/books with no title given', function(done) {
-        //done();
+        chai.request(server)
+        .post("/api/books")
+        .send({
+          title:""
+        })
+        .end(function(err,res){
+          assert.equal(res.status,200);
+          assert.equal(res.text,"missing required field title")
+          done()
+        })
       });
       
     });
