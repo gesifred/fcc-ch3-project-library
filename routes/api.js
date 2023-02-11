@@ -19,14 +19,12 @@ module.exports = function (app) {
       Db._connect();
       const allIssues = await Book
         .find()
-      //.select('-__v -project');
       allIssues.map(book => {
         let count = book.comments.length;
         Object.assign(book, { "commentcount": count })
       })
       allIssues.forEach(book => {
         let count = book.comments.length;
-        //console.log(count)
         Object.assign(book, { "commentcount": count })
       });
       return res.json(allIssues);
@@ -51,7 +49,7 @@ module.exports = function (app) {
       //if successful response will be 'complete delete successful'
       Db._connect();
       const result = await Book.deleteMany();
-      console.log(result);
+      //console.log(result);
       res.send("complete delete successful")
     });
 
@@ -59,14 +57,14 @@ module.exports = function (app) {
 
   app.route('/api/books/:id')
     .get(async function (req, res) {
-      let bookid = req.params.id;
+      let bookid = String(req.params.id);
       //json res format: {"_id": bookid, "title": book_title, "comments": [comment,comment,...]}
       let project = req.params.project;
       Db._connect();
       const bookQuery = { _id: bookid };
       const result = await Book
         .findOne(bookQuery)
-      .select('-created_on');
+        .select('-created_on');
       if(!result){
         res.send("no book exists");
       } else {
@@ -76,7 +74,7 @@ module.exports = function (app) {
     })
 
     .post(async function (req, res) {
-      let bookid = req.params.id;
+      let bookid = String(req.params.id);
       let comment = req.body.comment;
       //json res format same as .get
       if (!comment) {
@@ -91,7 +89,6 @@ module.exports = function (app) {
           },
           { new: true }
         );
-        console.log(result);
         if (!result){
           res.send("no book exists");
         }else{
@@ -101,11 +98,10 @@ module.exports = function (app) {
     })
 
     .delete(async function (req, res) {
-      let bookid = req.params.id;
+      let bookid = String(req.params.id);
       //if successful response will be 'delete successful'
       Db._connect();
       const result = await Book.findOneAndRemove({ _id: bookid });
-      console.log(result);
       if (!result) {
         res.send("no book exists");
       } else {
