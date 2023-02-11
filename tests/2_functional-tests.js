@@ -21,7 +21,13 @@ suite('Functional Tests', function() {
   */
   test('#example Test GET /api/books', function(done){
     this.timeout(5000);
-     chai.request(server)
+    chai.request(server)
+    .post("/api/books/")
+    .send({
+      title:"mybook1"
+    })
+    .end(function(err,res){
+      chai.request(server)
       .get('/api/books')
       .end(function(err, res){
         assert.equal(res.status, 200);
@@ -31,6 +37,7 @@ suite('Functional Tests', function() {
         assert.property(res.body[0], '_id', 'Books in array should contain _id');
         done();
       });
+    })
   });
   /*
   * ----[END of EXAMPLE TEST]----
