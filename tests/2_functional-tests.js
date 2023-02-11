@@ -20,7 +20,7 @@ suite('Functional Tests', function() {
   * Each test should completely test the response of the API end-point including response status code!
   */
   test('#example Test GET /api/books', function(done){
-    this.timeout(10000);
+    this.timeout(5000);
      chai.request(server)
       .get('/api/books')
       .end(function(err, res){
